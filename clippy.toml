@@ -1,0 +1,15 @@
+# Clippy configuration
+# See https://rust-lang.github.io/rust-clippy/master/index.html for all lints
+
+# Deny warnings in CI
+warn-on-all-wildcard-imports = true
+
+# Cognitive complexity threshold
+cognitive-complexity-threshold = 30
+
+# Documentation
+missing-docs-in-crate-items = false
+
+# Allow some common patterns
+# (These are warnings that are often false positives)
+# Add specific lint configurations as needed

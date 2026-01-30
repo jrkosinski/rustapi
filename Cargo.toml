@@ -1,0 +1,38 @@
+[package]
+name = "rusty-resty"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "A REST API server built with Rust and Axum"
+readme = "README.md"
+homepage = "https://github.com/yourusername/rusty-resty"
+repository = "https://github.com/yourusername/rusty-resty"
+license = "MIT OR Apache-2.0"
+keywords = ["api", "rest", "web", "axum"]
+categories = ["web-programming::http-server"]
+
+[dependencies]
+axum = "0.8.8"
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tower = "0.4"
+tower-http = { version = "0.5", features = ["trace", "cors"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+criterion = "0.5"
+axum-test = "15.0"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+
+[profile.dev]
+opt-level = 0
+
+[profile.bench]
+inherits = "release"
