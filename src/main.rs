@@ -1,15 +1,20 @@
-use axum::{routing::{get, post}, Router};
-use rustapi_core::Container;
+use rustapi_core::{
+    Container,
+    RustAPI,
+    Router,
+    routing::{get, post},
+    CorsLayer,
+    TraceLayer,
+};
 use rustapi_macros::get as get_macro;
-use tower_http::{cors::CorsLayer, trace::TraceLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 mod controllers;
 mod services;
 
-// Import the controller handler functions directly
-use controllers::echo_controller::echo;
-use controllers::health_controller::health_check;
+// Import controller handlers and their macro-generated path constants
+use controllers::echo_controller::{echo, __echo_route};
+use controllers::health_controller::{health_check, __health_check_route};
 use services::echo_service::EchoService;
 use services::health_service::HealthService;
 
@@ -26,8 +31,13 @@ async fn main() {
     initialize_tracing();
     let container = setup_container();
     let app = build_router(&container);
-    let listener = create_listener().await;
-    run_server(listener, app).await;
+
+    // Start the server using RustAPI framework
+    RustAPI::new(app)
+        .port(3000)  // Configurable port (default is 3000)
+        .serve()
+        .await
+        .expect("Failed to start server");
 }
 
 /// Initializes the tracing subscriber for logging
@@ -53,41 +63,28 @@ fn setup_container() -> Container {
 }
 
 /// Builds the application router using FastAPI-style route decorators
-/// Routes with State need to be added with `.with_state()` for DI
+/// Routes use macro-generated path constants for true decorator-based routing
 fn build_router(container: &Container) -> Router {
     // Resolve services from container
     let health_service = container.resolve::<HealthService>().unwrap();
     let echo_service = container.resolve::<EchoService>().unwrap();
 
     // Build separate routers for each service with their own state
+    // Path comes from the #[get("/health")] macro!
     let health_router = Router::new()
-        .route("/health", get(health_check))
+        .route(__health_check_route, get(health_check))
         .with_state(health_service);
 
+    // Path comes from the #[post("/echo")] macro!
     let echo_router = Router::new()
-        .route("/echo", post(echo))
+        .route(__echo_route, post(echo))
         .with_state(echo_service);
 
     // Merge all routers together
     Router::new()
-        .route(__root_route.0, __root_route.1())
+        .route(__root_route, get(root))
         .merge(health_router)
         .merge(echo_router)
         .layer(TraceLayer::new_for_http())
         .layer(CorsLayer::permissive())
-}
-
-/// Creates and binds the TCP listener on port 3000
-async fn create_listener() -> tokio::net::TcpListener {
-    tokio::net::TcpListener::bind("0.0.0.0:3000")
-        .await
-        .unwrap()
-}
-
-/// Runs the server with the given listener and application router
-async fn run_server(listener: tokio::net::TcpListener, app: Router) {
-    tracing::info!("Server running on http://0.0.0.0:3000");
-    axum::serve(listener, app)
-        .await
-        .unwrap();
 }

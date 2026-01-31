@@ -1,4 +1,5 @@
 use axum::{extract::State, Json};
+use rustapi_macros::post;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use crate::services::echo_service::{EchoService, EchoResponse};
@@ -11,6 +12,7 @@ pub struct EchoRequest {
 
 /// Echo endpoint that echoes back the received message.
 /// Uses dependency injection to access the EchoService.
+#[post("/echo")]
 pub async fn echo(
     State(service): State<Arc<EchoService>>,
     Json(payload): Json<EchoRequest>

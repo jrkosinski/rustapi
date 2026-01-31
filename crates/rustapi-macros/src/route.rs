@@ -81,21 +81,13 @@ pub fn expand_route_macro(
         func_name.span()
     );
 
-    let axum_method = method.axum_method();
-
-    //convert path from axum style (:id) to axum path style
-    let path_value = path.value();
-
     let expanded = quote! {
         //original handler function
         #func
 
-        //route registration helper
+        //route path constant - stores just the path for registration
         #[allow(non_upper_case_globals)]
-        #func_vis const #route_helper_name: (&str, fn() -> ::axum::routing::MethodRouter) = (
-            #path,
-            || ::axum::routing::#axum_method(#func_name)
-        );
+        #func_vis const #route_helper_name: &str = #path;
     };
 
     TokenStream::from(expanded)
