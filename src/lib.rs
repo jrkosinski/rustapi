@@ -51,6 +51,7 @@ pub use rustapi_core::{
     App,
     Error as CoreError,
     Result as CoreResult,
+    RouterExt,
 };
 
 //re-export macros
@@ -62,9 +63,11 @@ pub use rustapi_macros::{
     patch,
 };
 
+//re-export router module and utilities
+pub use rustapi_core::router;
+
 //re-export commonly used axum types
 pub use axum::{
-    Router,
     Json,
     extract::{Path, Query, State},
     http::StatusCode,
@@ -88,6 +91,7 @@ pub mod prelude {
         App,
         CoreError,
         CoreResult,
+        RouterExt,
 
         //macros
         get,
@@ -96,8 +100,10 @@ pub mod prelude {
         delete,
         patch,
 
+        //router utilities
+        router,
+
         //axum
-        Router,
         Json,
         Path,
         Query,

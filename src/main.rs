@@ -2,6 +2,7 @@ use rustapi_core::{
     Container,
     RustAPI,
     Router,
+    router,
     routing::{get, post},
     CorsLayer,
     TraceLayer,
@@ -70,6 +71,7 @@ fn build_router(container: &Container) -> Router {
     let echo_service = container.resolve::<EchoService>().unwrap();
 
     // Build separate routers for each service with their own state
+    // Note: Routes are added before calling with_state() - this is Axum's pattern
     // Path comes from the #[get("/health")] macro!
     let health_router = Router::new()
         .route(__health_check_route, get(health_check))
@@ -81,7 +83,8 @@ fn build_router(container: &Container) -> Router {
         .with_state(echo_service);
 
     // Merge all routers together
-    Router::new()
+    // Using router::build() as recommended entry point, but Router::new() also works
+    router::build()
         .route(__root_route, get(root))
         .merge(health_router)
         .merge(echo_router)

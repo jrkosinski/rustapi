@@ -17,7 +17,8 @@ pub use di::{Container, Injectable};
 pub use app::App;
 pub use error::{Error, Result};
 pub use server::RustAPI;
-pub use router::Router;
+pub use router::{Router, RouterExt};
+// Re-export Router for compatibility, but encourage using router::build() instead
 
 // Re-export routing methods from Axum
 // These are used to define route handlers (get, post, put, delete, etc.)
