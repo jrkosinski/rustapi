@@ -1,10 +1,10 @@
 [package]
-name = "rustapi-macros"
+name = "rust-api-macros"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
-description = "Procedural macros for rustapi framework"
+description = "Procedural macros for rust-api framework"
 readme = "../../README.md"
 homepage = "https://github.com/jrkosinski/rustapi"
 repository = "https://github.com/jrkosinski/rustapi"

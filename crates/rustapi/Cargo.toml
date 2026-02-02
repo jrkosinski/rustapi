@@ -1,10 +1,10 @@
 [package]
-name = "rustapi"
+name = "rust-api"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
-description = "FastAPI-inspired REST framework for Rust with automatic OpenAPI, validation, and DI"
+description = "FastAPI-inspired REST framework for Rust with route macros, dependency injection, and automatic OpenAPI generation"
 readme = "../../README.md"
 homepage = "https://github.com/jrkosinski/rustapi"
 repository = "https://github.com/jrkosinski/rustapi"
@@ -13,7 +13,7 @@ categories = ["web-programming::http-server"]
 
 [dependencies]
 # Internal dependencies
-rustapi-macros = { path = "../rustapi-macros", version = "0.0.1" }
+rust-api-macros = { path = "../rustapi-macros", version = "0.0.1" }
 
 # Workspace dependencies
 tokio = { workspace = true }
