@@ -13,7 +13,7 @@ categories = ["web-programming::http-server"]
 
 [dependencies]
 # Internal dependencies
-rustapi-macros = { path = "../rustapi-macros", version = "0.1.0" }
+rustapi-macros = { path = "../rustapi-macros", version = "0.0.1" }
 
 # Workspace dependencies
 tokio = { workspace = true }
